@@ -44,17 +44,29 @@ function IM() {
 
 IM.prototype.init = function (options) {
     console.log("options.BOSH_SERVICE",options)
+    this.argOptions = options
     this.connection = new Strophe.Connection(options.BOSH_SERVICE,options);
     this.connection.addProtocolErrorHandler("HTTP", "900", ()=>{});
     this.connection.rawInput = this.rawInput;
     this.connection.rawOutput = this.rawOutput;
     return this;
 };
+IM.prototype.reload = function(options) {
+        console.log('连接失败,3秒后自动重连...')
+        console.log(this)
+        this.reloadTimer && clearTimeout(this.reloadTimer)
+        this.reloadTimer = setTimeout(() => {
+             this.connect(options)
+        },3000)
+}
 
-IM.prototype.connect = function (options,callback) {
+IM.prototype.connect = function (options,callback) {  // 进行连接
     this.jid = options.jid;
     this.pass = options.pass;
-    
+    if(!this.jid && this.pass) {
+         console.log('请输入用户名密码')
+         return
+    }
     this.connection.connect(this.jid, this.pass, (status)=>{
         if (status === Strophe.Status.CONNECTING) {
             log('Strophe is connecting.');
@@ -64,6 +76,7 @@ IM.prototype.connect = function (options,callback) {
             log('Strophe is disconnecting.');
         } else if (status === Strophe.Status.DISCONNECTED) {
             log('Strophe is disconnected.');
+            this.reload({ jid : this.jid, pass : this.pass }) // 重连
         } else if (status === Strophe.Status.CONNECTED) {
             log('Strophe is connected.');
             this.connection.addHandler(this.onMessage.bind(this), null, 'message', null, null,  null);

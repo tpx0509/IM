@@ -31,9 +31,7 @@ const vm = new Vue({
   beforeCreate: function(){
       //var BOSH_SERVICE = 'http://10.66.5.140:7070/http-bind/';
       // var BOSH_SERVICE = 'ws://10.66.5.200:7070/ws/';
-      // var BOSH_SERVICE = 'ws://10.66.5.140:7070/ws/';
-      // this.$store.state.im = new IM().init({BOSH_SERVICE:this.$store.state.BOSH_SERVICE,mechanisms:[Strophe.SASLMD5]});
-      this.$store.dispatch('Iminit');
+      this.$store.state.im = new IM().init({BOSH_SERVICE: this.$store.state.config.BOSH_SERVICE,mechanisms:[Strophe.SASLMD5]});
   },
   created: function () {
 

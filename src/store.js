@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import config from './stores/config'
 Vue.use(Vuex);
 
 
@@ -131,9 +132,6 @@ const store = new Vuex.Store({
       connect:function () {
 
       },
-      Iminit({ commit,state }) {
-         state.im = new IM().init({BOSH_SERVICE:state.BOSH_SERVICE,mechanisms:[Strophe.SASLMD5]});
-      },
       remove_user:function ({ commit, state },jid) {
           return new Promise((resolve, reject) => {
               state.im.remove_user(jid,function () {
@@ -151,6 +149,9 @@ const store = new Vuex.Store({
       unshield_user:function ({ commit, state },jid) {
         state.im.unshield_user(jid);
       }
+  },
+  modules : {
+       config
   }
 });
 

@@ -5427,7 +5427,7 @@
 			_connect: function() {
 				// Ensure that there is no open WebSocket from a previous Connection.
 				this._closeSocket();
-
+					
 				// Create the new WobSocket
 				this.socket = new WebSocket(this._conn.service, "xmpp");
 				this.socket.onopen = this._onOpen.bind(this);
